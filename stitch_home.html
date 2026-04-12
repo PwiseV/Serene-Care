@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+
+<html class="scroll-smooth" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Serene Care | Your Wellness Journey</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Plus+Jakarta+Sans:wght@700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-high": "#eae7e7",
+                        "primary": "#3949da",
+                        "surface-bright": "#fcf9f8",
+                        "secondary-container": "#91f78d",
+                        "tertiary-fixed": "#85f6e5",
+                        "on-secondary": "#ffffff",
+                        "primary-fixed-dim": "#bdc2ff",
+                        "surface-container-low": "#f6f3f2",
+                        "inverse-primary": "#bdc2ff",
+                        "tertiary-container": "#008377",
+                        "inverse-surface": "#303030",
+                        "surface-container-lowest": "#ffffff",
+                        "error": "#ba1a1a",
+                        "surface-container": "#f0eded",
+                        "error-container": "#ffdad6",
+                        "tertiary-fixed-dim": "#67d9c9",
+                        "secondary-fixed-dim": "#78dc77",
+                        "on-secondary-fixed-variant": "#005313",
+                        "on-surface-variant": "#454655",
+                        "on-background": "#1b1c1c",
+                        "background": "#fcf9f8",
+                        "on-secondary-fixed": "#002204",
+                        "on-tertiary-container": "#f4fffb",
+                        "on-error": "#ffffff",
+                        "inverse-on-surface": "#f3f0ef",
+                        "surface-dim": "#dcd9d9",
+                        "secondary-fixed": "#94f990",
+                        "primary-fixed": "#dfe0ff",
+                        "on-error-container": "#93000a",
+                        "surface-variant": "#e4e2e1",
+                        "on-tertiary-fixed": "#00201c",
+                        "on-primary-fixed": "#000865",
+                        "on-primary": "#ffffff",
+                        "on-tertiary-fixed-variant": "#005048",
+                        "on-surface": "#1b1c1c",
+                        "outline-variant": "#c5c5d7",
+                        "surface-container-highest": "#e4e2e1",
+                        "primary-container": "#5464f4",
+                        "on-primary-fixed-variant": "#1d2ec5",
+                        "surface-tint": "#3c4cdd",
+                        "on-secondary-container": "#00731e",
+                        "secondary": "#006e1c",
+                        "outline": "#757686",
+                        "surface": "#fcf9f8",
+                        "on-tertiary": "#ffffff",
+                        "tertiary": "#00685e",
+                        "on-primary-container": "#fffbff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Plus Jakarta Sans"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                },
+            }
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3 { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface">
+<!-- TopNavBar -->
+<header class="fixed top-0 w-full z-50 bg-white/70 backdrop-blur-xl shadow-[0px_12px_32px_rgba(27,28,28,0.06)]">
+<nav class="flex justify-between items-center h-20 px-8 max-w-7xl mx-auto">
+<div class="text-2xl font-bold tracking-tighter text-indigo-600">Serene Care</div>
+<div class="hidden md:flex items-center gap-8">
+<a class="text-indigo-600 border-b-2 border-indigo-600 pb-1 font-medium Inter" href="#">Home</a>
+<a class="text-slate-600 hover:text-indigo-500 transition-colors font-medium Inter" href="#">Doctors</a>
+<a class="text-slate-600 hover:text-indigo-500 transition-colors font-medium Inter" href="#">About</a>
+<a class="text-slate-600 hover:text-indigo-500 transition-colors font-medium Inter" href="#">Contact</a>
+</div>
+<div class="flex items-center gap-4">
+<button class="px-6 py-2.5 text-indigo-600 font-semibold hover:bg-slate-100 transition-all rounded-full active:scale-95">Login</button>
+<button class="px-6 py-2.5 bg-primary text-on-primary font-semibold rounded-full shadow-lg shadow-primary/20 hover:opacity-90 transition-all active:scale-95">Sign Up</button>
+</div>
+</nav>
+</header>
+<main class="pt-20">
+<!-- Hero Section -->
+<section class="relative min-h-[870px] flex items-center overflow-hidden">
+<div class="absolute inset-0 z-0">
+<img class="w-full h-full object-cover opacity-90" data-alt="Modern serene clinic interior with large windows, soft natural light, and clean minimalist architectural details in white and soft blues" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAuccvRiJ3FUunJSXbieq0Oh2OWGKgSZhwpqF7u_zjYZruW0ybdrfjHBSQDMrQaLLdCRGtY7Bqe-KLWrTASCk27npMbhq8jKdz5ZzlrYOGIktrrvQflRcdNGCezPBSyiN3cGrxsL9wKtfAsaF7YUaei_nxHFEQ3gWgdYvO0vIpqoIHBZGsdLmAc7_wGAhRvJkdZwTMFQnJfKO75s4RDe5-r4KAqMgCWzALixAZevyns6g3MMc8EUG35Gl2zEbqoUjHeFzQDGs6-QUw"/>
+<div class="absolute inset-0 bg-gradient-to-r from-surface via-surface/60 to-transparent"></div>
+</div>
+<div class="relative z-10 max-w-7xl mx-auto px-8 w-full">
+<div class="max-w-2xl">
+<h1 class="text-7xl font-extrabold tracking-tight text-on-surface leading-[1.1] mb-6">
+                        Your Wellness Journey Starts with Clarity
+                    </h1>
+<p class="text-xl text-on-surface-variant mb-10 leading-relaxed font-medium">
+                        Experience healthcare redefined through a lens of serenity. Connect with elite specialists in a sanctuary designed for your peace of mind.
+                    </p>
+<!-- Search Bar -->
+<div class="bg-surface-container-lowest p-2 rounded-2xl shadow-[0px_12px_32px_rgba(27,28,28,0.06)] flex flex-col md:flex-row gap-2 max-w-xl">
+<div class="flex-1 flex items-center px-4 gap-3 bg-surface-container-low rounded-xl">
+<span class="material-symbols-outlined text-outline">search</span>
+<input class="w-full bg-transparent border-none focus:ring-0 py-4 text-on-surface" placeholder="Search doctors, specialties..." type="text"/>
+</div>
+<button class="bg-primary hover:bg-primary-container text-on-primary px-8 py-4 rounded-xl font-bold transition-all active:scale-95">
+                            Search
+                        </button>
+</div>
+</div>
+</div>
+</section>
+<!-- Specialties Section -->
+<section class="py-24 bg-surface">
+<div class="max-w-7xl mx-auto px-8">
+<div class="flex justify-between items-end mb-12">
+<div>
+<span class="text-primary font-bold tracking-widest uppercase text-xs mb-2 block">Departments</span>
+<h2 class="text-4xl font-bold tracking-tight">Explore Specialties</h2>
+</div>
+<div class="flex gap-2">
+<button class="p-3 rounded-full bg-surface-container hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<button class="p-3 rounded-full bg-surface-container hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</div>
+<div class="flex gap-6 overflow-x-auto pb-8 no-scrollbar">
+<!-- Specialty Card 1 -->
+<div class="min-w-[280px] bg-surface-container-lowest p-8 rounded-lg group hover:bg-primary transition-all duration-500 cursor-pointer">
+<div class="w-16 h-16 rounded-2xl bg-primary-fixed flex items-center justify-center mb-6 group-hover:bg-white/20 transition-colors">
+<span class="material-symbols-outlined text-primary group-hover:text-white text-3xl">psychology</span>
+</div>
+<h3 class="text-xl font-bold mb-2 group-hover:text-white">Neurology</h3>
+<p class="text-on-surface-variant group-hover:text-white/80 text-sm leading-relaxed">Expert care for complex brain and nervous system health.</p>
+</div>
+<!-- Specialty Card 2 -->
+<div class="min-w-[280px] bg-primary p-8 rounded-lg shadow-xl shadow-primary/20 cursor-pointer">
+<div class="w-16 h-16 rounded-2xl bg-white/20 flex items-center justify-center mb-6">
+<span class="material-symbols-outlined text-white text-3xl">favorite</span>
+</div>
+<h3 class="text-xl font-bold mb-2 text-white">Cardiology</h3>
+<p class="text-white/80 text-sm leading-relaxed">Comprehensive heart wellness and advanced cardiovascular diagnostics.</p>
+</div>
+<!-- Specialty Card 3 -->
+<div class="min-w-[280px] bg-surface-container-lowest p-8 rounded-lg group hover:bg-primary transition-all duration-500 cursor-pointer">
+<div class="w-16 h-16 rounded-2xl bg-primary-fixed flex items-center justify-center mb-6 group-hover:bg-white/20 transition-colors">
+<span class="material-symbols-outlined text-primary group-hover:text-white text-3xl">pediatrics</span>
+</div>
+<h3 class="text-xl font-bold mb-2 group-hover:text-white">Pediatrics</h3>
+<p class="text-on-surface-variant group-hover:text-white/80 text-sm leading-relaxed">Nurturing healthcare for the youngest members of your family.</p>
+</div>
+<!-- Specialty Card 4 -->
+<div class="min-w-[280px] bg-surface-container-lowest p-8 rounded-lg group hover:bg-primary transition-all duration-500 cursor-pointer">
+<div class="w-16 h-16 rounded-2xl bg-primary-fixed flex items-center justify-center mb-6 group-hover:bg-white/20 transition-colors">
+<span class="material-symbols-outlined text-primary group-hover:text-white text-3xl">visibility</span>
+</div>
+<h3 class="text-xl font-bold mb-2 group-hover:text-white">Ophthalmology</h3>
+<p class="text-on-surface-variant group-hover:text-white/80 text-sm leading-relaxed">Precision vision care and advanced eye surgical procedures.</p>
+</div>
+<!-- Specialty Card 5 -->
+<div class="min-w-[280px] bg-surface-container-lowest p-8 rounded-lg group hover:bg-primary transition-all duration-500 cursor-pointer">
+<div class="w-16 h-16 rounded-2xl bg-primary-fixed flex items-center justify-center mb-6 group-hover:bg-white/20 transition-colors">
+<span class="material-symbols-outlined text-primary group-hover:text-white text-3xl">skeleton</span>
+</div>
+<h3 class="text-xl font-bold mb-2 group-hover:text-white">Orthopedics</h3>
+<p class="text-on-surface-variant group-hover:text-white/80 text-sm leading-relaxed">Advanced solutions for mobility and musculoskeletal recovery.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Top Specialists Section -->
+<section class="py-24 bg-surface-container-low">
+<div class="max-w-7xl mx-auto px-8">
+<div class="text-center mb-16">
+<h2 class="text-4xl font-bold tracking-tight mb-4">Elite Clinical Specialists</h2>
+<p class="text-on-surface-variant max-w-xl mx-auto font-medium">Connect with top-rated medical professionals recognized for their excellence in clinical practice and patient care.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+<!-- Doctor Card 1 -->
+<div class="bg-surface-container-lowest rounded-lg overflow-hidden flex flex-col group hover:-translate-y-2 transition-transform duration-300">
+<div class="h-64 overflow-hidden relative">
+<img class="w-full h-full object-cover grayscale-[0.3] group-hover:grayscale-0 transition-all duration-500" data-alt="Professional portrait of a male doctor in his 40s wearing a white coat, friendly expression, blurred clinical background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDxM3wvQ3AXeNjr-mkMpq-mWQBw2yJU6Ht92KpG6oSJ7-QirmzOLx0N80kodTBVEcx43whAMXoqiAWQIlBH9NNeSDNbMdve80IWgFSrQItrcz9yVDVJT0SvGAYY4epxmIlMSuNqJvJ6qMwIz2VbD-nnJKuAjC8BKkzEYNGzbZZyjLgRLsSQyboClI3m_A8jffyHWXKQIITppk6O9LwEOLDZQb_1P5zgueGBnBQGBVirZ8Qdw5ZM4AqvWxDp6rJCyhUDCszKLORpUPo"/>
+<div class="absolute top-4 right-4 bg-secondary-container px-3 py-1 rounded-full flex items-center gap-1">
+<span class="material-symbols-outlined text-xs text-on-secondary-container" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-xs font-bold text-on-secondary-container">4.9</span>
+</div>
+</div>
+<div class="p-8 flex flex-col flex-1">
+<div class="mb-6">
+<span class="text-secondary font-bold text-xs uppercase tracking-widest mb-1 block">Cardiologist</span>
+<h3 class="text-xl font-bold text-on-surface">Dr. Julian Sterling</h3>
+<p class="text-sm text-on-surface-variant mt-2 leading-relaxed">Specializing in minimally invasive cardiac procedures and preventative health.</p>
+</div>
+<div class="mt-auto flex items-center justify-between">
+<div class="text-primary font-bold">$120<span class="text-on-surface-variant font-medium text-xs">/session</span></div>
+<button class="px-6 py-3 bg-surface-container-high hover:bg-primary hover:text-white rounded-full font-bold transition-all active:scale-95">
+                                    Book Appointment
+                                </button>
+</div>
+</div>
+</div>
+<!-- Doctor Card 2 -->
+<div class="bg-surface-container-lowest rounded-lg overflow-hidden flex flex-col group hover:-translate-y-2 transition-transform duration-300 shadow-xl shadow-indigo-500/5">
+<div class="h-64 overflow-hidden relative">
+<img class="w-full h-full object-cover grayscale-[0.3] group-hover:grayscale-0 transition-all duration-500" data-alt="Professional portrait of a female doctor with glasses, wearing a stethoscope, warm lighting, smiling kindly" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDG44Hr-4XrbokPuRpD4kv9KWG-0bpd9sZsUDVKfglp4GvUDUKWSuxz62EGt6CSBm2v7sm1W1cIBezaklOMJQUIFiFFUqX9Qo21Ap5Skg9vl-pna8u0wns8vxyOyvqNaeJ3REGVbJRDCjIQv-K3qSFFLun9CwsGrtWs7E6lMjZYY6z0tJR88SydgSCHyAH-ABaD0NS9BzSyWmcY3Cmo2HUQrggiAsSQYVzs6FWNxHUmrPVaUl8dqCBGAuHa5EsUxxcAiYOZVEefzOo"/>
+<div class="absolute top-4 right-4 bg-secondary-container px-3 py-1 rounded-full flex items-center gap-1">
+<span class="material-symbols-outlined text-xs text-on-secondary-container" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-xs font-bold text-on-secondary-container">5.0</span>
+</div>
+</div>
+<div class="p-8 flex flex-col flex-1">
+<div class="mb-6">
+<span class="text-secondary font-bold text-xs uppercase tracking-widest mb-1 block">Neurologist</span>
+<h3 class="text-xl font-bold text-on-surface">Dr. Elena Rodriguez</h3>
+<p class="text-sm text-on-surface-variant mt-2 leading-relaxed">Renowned for neurodegenerative research and empathetic patient advocacy.</p>
+</div>
+<div class="mt-auto flex items-center justify-between">
+<div class="text-primary font-bold">$150<span class="text-on-surface-variant font-medium text-xs">/session</span></div>
+<button class="px-6 py-3 bg-primary text-on-primary rounded-full font-bold transition-all shadow-lg shadow-primary/20 active:scale-95">
+                                    Book Appointment
+                                </button>
+</div>
+</div>
+</div>
+<!-- Doctor Card 3 -->
+<div class="bg-surface-container-lowest rounded-lg overflow-hidden flex flex-col group hover:-translate-y-2 transition-transform duration-300">
+<div class="h-64 overflow-hidden relative">
+<img class="w-full h-full object-cover grayscale-[0.3] group-hover:grayscale-0 transition-all duration-500" data-alt="Modern professional male specialist in scrubs, looking confident, soft blurred medical office background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCLYOA7pdu5SZxnIxA3ptWv-uKBhR3r2z2ZuOrL1W_qGcZ2dvizAn_mQlhDtndaeUrUlsjWh-cqBSxIrAfQAR_8RRrVuHd6DnZBI5k8DNv32AZBQmEo5jXuzZa0N_apLR-SIMzZVBgMVQ3w1PNM4v_E8PpVLR8etOvi6J9Fuv0rlc3MP_ql3L8WmtasYDlE6leDqTGRZn0sDyIhIlkPnqUgB6B5PkKFnbmey_QDDYDkQwb6JUBD9eyEWedVnTenvkuWsJOXN26DxDY"/>
+<div class="absolute top-4 right-4 bg-secondary-container px-3 py-1 rounded-full flex items-center gap-1">
+<span class="material-symbols-outlined text-xs text-on-secondary-container" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-xs font-bold text-on-secondary-container">4.8</span>
+</div>
+</div>
+<div class="p-8 flex flex-col flex-1">
+<div class="mb-6">
+<span class="text-secondary font-bold text-xs uppercase tracking-widest mb-1 block">Pediatrician</span>
+<h3 class="text-xl font-bold text-on-surface">Dr. Marcus Chen</h3>
+<p class="text-sm text-on-surface-variant mt-2 leading-relaxed">Over 15 years of experience in childhood development and chronic care.</p>
+</div>
+<div class="mt-auto flex items-center justify-between">
+<div class="text-primary font-bold">$110<span class="text-on-surface-variant font-medium text-xs">/session</span></div>
+<button class="px-6 py-3 bg-surface-container-high hover:bg-primary hover:text-white rounded-full font-bold transition-all active:scale-95">
+                                    Book Appointment
+                                </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- CTA Section -->
+<section class="py-24 px-8">
+<div class="max-w-7xl mx-auto rounded-xl bg-primary-container p-16 relative overflow-hidden">
+<div class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-12">
+<div class="max-w-xl">
+<h2 class="text-5xl font-bold text-white mb-6 leading-tight">Ready to prioritize your health?</h2>
+<p class="text-white/80 text-xl font-medium">Join 50,000+ patients who have found clarity and peace with Serene Care.</p>
+</div>
+<div class="flex gap-4">
+<button class="bg-white text-primary px-10 py-5 rounded-full font-extrabold text-lg shadow-2xl transition-all active:scale-95">Find a Doctor</button>
+<button class="bg-white/10 text-white border border-white/20 px-10 py-5 rounded-full font-extrabold text-lg transition-all hover:bg-white/20">Learn More</button>
+</div>
+</div>
+<!-- Abstract Design Elements -->
+<div class="absolute -right-24 -bottom-24 w-96 h-96 bg-white/10 rounded-full blur-3xl"></div>
+<div class="absolute -left-24 -top-24 w-64 h-64 bg-indigo-400/20 rounded-full blur-3xl"></div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-slate-50 dark:bg-slate-950 w-full rounded-t-[2rem]">
+<div class="flex flex-col md:flex-row justify-between items-center py-12 px-8 max-w-7xl mx-auto">
+<div class="mb-8 md:mb-0">
+<div class="text-lg font-bold text-indigo-600 mb-2">Serene Care</div>
+<p class="text-sm font-medium Inter text-slate-500 dark:text-slate-400">© 2024 Serene Care. All rights reserved.</p>
+</div>
+<div class="flex gap-8">
+<a class="text-sm font-medium Inter text-slate-500 dark:text-slate-400 hover:text-indigo-500 underline-offset-4 hover:underline transition-opacity duration-200" href="#">Privacy Policy</a>
+<a class="text-sm font-medium Inter text-slate-500 dark:text-slate-400 hover:text-indigo-500 underline-offset-4 hover:underline transition-opacity duration-200" href="#">Terms of Service</a>
+<a class="text-sm font-medium Inter text-slate-500 dark:text-slate-400 hover:text-indigo-500 underline-offset-4 hover:underline transition-opacity duration-200" href="#">Help Center</a>
+<a class="text-sm font-medium Inter text-slate-500 dark:text-slate-400 hover:text-indigo-500 underline-offset-4 hover:underline transition-opacity duration-200" href="#">Careers</a>
+</div>
+<div class="flex gap-4 mt-8 md:mt-0">
+<span class="material-symbols-outlined text-slate-400 hover:text-primary cursor-pointer">public</span>
+<span class="material-symbols-outlined text-slate-400 hover:text-primary cursor-pointer">chat</span>
+<span class="material-symbols-outlined text-slate-400 hover:text-primary cursor-pointer">mail</span>
+</div>
+</div>
+</footer>
+</body></html>
