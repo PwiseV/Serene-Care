@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Plus_Jakarta_Sans } from "next/font/google";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { auth } from "@/auth";
 import "./globals.css";
 
 const inter = Inter({
@@ -21,11 +22,13 @@ export const metadata: Metadata = {
   description: "The Ethereal Clinic - A modern healthcare experience",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const session = await auth();
+
   return (
     <html
       lang="vi"
@@ -35,7 +38,7 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
       </head>
       <body className="min-h-full flex flex-col bg-background text-on-surface">
-        <Header />
+        <Header session={session} />
         {children}
         <Footer />
       </body>

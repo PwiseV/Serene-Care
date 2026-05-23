@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+
+<html class="light" lang="vi"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Lịch hẹn của tôi | Serene Care</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-high": "#eae7e7",
+                        "primary": "#3949da",
+                        "surface-bright": "#fcf9f8",
+                        "secondary-container": "#91f78d",
+                        "tertiary-fixed": "#85f6e5",
+                        "on-secondary": "#ffffff",
+                        "primary-fixed-dim": "#bdc2ff",
+                        "surface-container-low": "#f6f3f2",
+                        "inverse-primary": "#bdc2ff",
+                        "tertiary-container": "#008377",
+                        "inverse-surface": "#303030",
+                        "surface-container-lowest": "#ffffff",
+                        "error": "#ba1a1a",
+                        "surface-container": "#f0eded",
+                        "error-container": "#ffdad6",
+                        "tertiary-fixed-dim": "#67d9c9",
+                        "secondary-fixed-dim": "#78dc77",
+                        "on-secondary-fixed-variant": "#005313",
+                        "on-surface-variant": "#454655",
+                        "on-background": "#1b1c1c",
+                        "background": "#fcf9f8",
+                        "on-secondary-fixed": "#002204",
+                        "on-tertiary-container": "#f4fffb",
+                        "on-error": "#ffffff",
+                        "inverse-on-surface": "#f3f0ef",
+                        "surface-dim": "#dcd9d9",
+                        "secondary-fixed": "#94f990",
+                        "primary-fixed": "#dfe0ff",
+                        "on-error-container": "#93000a",
+                        "surface-variant": "#e4e2e1",
+                        "on-tertiary-fixed": "#00201c",
+                        "on-primary-fixed": "#000865",
+                        "on-primary": "#ffffff",
+                        "on-tertiary-fixed-variant": "#005048",
+                        "on-surface": "#1b1c1c",
+                        "outline-variant": "#c5c5d7",
+                        "surface-container-highest": "#e4e2e1",
+                        "primary-container": "#5464f4",
+                        "on-primary-fixed-variant": "#1d2ec5",
+                        "surface-tint": "#3c4cdd",
+                        "on-secondary-container": "#00731e",
+                        "secondary": "#006e1c",
+                        "outline": "#757686",
+                        "surface": "#fcf9f8",
+                        "on-tertiary": "#ffffff",
+                        "tertiary": "#00685e",
+                        "on-primary-container": "#fffbff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Plus Jakarta Sans"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #fcf9f8;
+        }
+        h1, h2, h3 {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface antialiased">
+<!-- Top Navigation Bar -->
+<nav class="fixed top-0 w-full z-50 bg-white/70 backdrop-blur-xl shadow-[0px_12px_32px_rgba(27,28,28,0.06)]">
+<div class="flex justify-between items-center h-20 px-8 max-w-7xl mx-auto">
+<div class="flex items-center gap-12">
+<span class="text-2xl font-bold tracking-tighter text-indigo-600">Serene Care</span>
+<div class="hidden md:flex gap-8">
+<a class="text-slate-600 hover:text-indigo-500 transition-colors font-medium" href="#">Trang chủ</a>
+<a class="text-slate-600 hover:text-indigo-500 transition-colors font-medium" href="#">Bác sĩ</a>
+<a class="text-slate-600 hover:text-indigo-500 transition-colors font-medium" href="#">Giới thiệu</a>
+<a class="text-slate-600 hover:text-indigo-500 transition-colors font-medium" href="#">Liên hệ</a>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="w-10 h-10 rounded-full bg-surface-container-high overflow-hidden">
+<img alt="User profile" data-alt="Close up portrait of a smiling woman with a professional appearance in a bright, modern office setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDQfXsofMFv4ah0bgfIFXXAbXqN_yoqL3Et7knnvF-6ch5bPGcom1cwpurQvnX3zIgSzUgDrn1Kki_-T7SiY7ptDcZpT_UJPlITyjtNO4yNw1C_TS3jsdWn36uVUAVHc-uau5wK-DnjDElfADvQ3GJuWOxy3S7ZwCMymsONV19lGvUk6HQC_-FOsrkLw_AQwmDF86mUyuZjzsnRj4QHPBZKbX9JNl-wwjtfO19EmO8Z5u9PYtjqh3uvA6RQa4wFXKcBAnN_nckvmaw"/>
+</div>
+</div>
+</div>
+</nav>
+<main class="pt-32 pb-24 px-8 max-w-7xl mx-auto min-h-screen">
+<!-- Header Section -->
+<header class="mb-12">
+<h1 class="text-5xl font-extrabold tracking-tight text-on-surface mb-4">Lịch hẹn của tôi</h1>
+<p class="text-on-surface-variant text-lg max-w-2xl">Quản lý các lần khám sắp tới, xem lịch sử y tế và theo dõi hành trình sức khỏe của bạn trong môi trường kỹ thuật số yên bình của chúng tôi.</p>
+</header>
+<!-- Tabs Navigation -->
+<div class="flex items-center gap-2 mb-10 p-1.5 bg-surface-container-low rounded-full w-fit">
+<button class="px-8 py-3 rounded-full bg-primary text-on-primary font-semibold shadow-sm transition-all duration-300">
+                Sắp tới
+            </button>
+<button class="px-8 py-3 rounded-full text-on-surface-variant hover:bg-surface-container-high transition-all duration-300 font-medium">
+                Đã khám
+            </button>
+<button class="px-8 py-3 rounded-full text-on-surface-variant hover:bg-surface-container-high transition-all duration-300 font-medium">
+                Đã hủy
+            </button>
+</div>
+<!-- Appointment Content (Bento Style Grid) -->
+<div class="grid grid-cols-1 gap-6">
+<!-- Active Appointment Card 1 -->
+<div class="group relative bg-surface-container-lowest rounded-lg p-8 transition-all duration-300 hover:shadow-[0px_12px_32px_rgba(27,28,28,0.06)] flex flex-col md:flex-row items-center gap-10">
+<div class="relative flex-shrink-0">
+<div class="w-32 h-32 rounded-lg overflow-hidden bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="Portrait of a friendly male doctor with a stethoscope around his neck, professional medical setting with soft natural light" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBu2XeT6fU4MHrtMxQpQ9XAYPtpiNW0dzOsW4f4hbAKrIZhGGRh2sAes8RQObOshhOHZlaVvNQk5_aueo0aoXt34LYVprlBif-3ffCH22P-rbrLn0ltyX7BwOn9tCyyXvEc9UnKMER16h43d5C5m4zIFoHGrXPQZK1uD01im3iZ9FdNm88sLZdP5ZOXAiWRBgHflsL3FenBy0axAE5CClDYUkz0Kds83abHVeJvyRNnz20EZhXmMblLpcBjARnMJZVRzoxlLCYNaaA"/>
+</div>
+<div class="absolute -bottom-2 -right-2 bg-secondary-container text-on-secondary-container text-[10px] font-bold px-2 py-1 rounded-full uppercase tracking-wider">
+                        Đã xác nhận
+                    </div>
+</div>
+<div class="flex-grow space-y-2 text-center md:text-left">
+<p class="text-secondary font-semibold text-sm tracking-wide">Chuyên khoa Tim mạch</p>
+<h3 class="text-2xl font-bold text-on-surface">BS. Julian Sterling</h3>
+<div class="flex flex-wrap items-center justify-center md:justify-start gap-6 pt-2 text-on-surface-variant">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-xl" data-icon="calendar_today">calendar_today</span>
+<span class="font-medium">24 tháng 10, 2024</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-xl" data-icon="schedule">schedule</span>
+<span class="font-medium">09:30 AM — 10:15 AM</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-xl" data-icon="location_on">location_on</span>
+<span class="font-medium">Sảnh Tây, Phòng 402</span>
+</div>
+</div>
+</div>
+<div class="flex flex-col md:flex-row gap-3 w-full md:w-auto">
+<button class="px-6 py-3 bg-surface-container-low text-on-surface font-semibold rounded-full hover:bg-surface-container-high transition-all active:scale-95">
+                        Đổi lịch
+                    </button>
+<button class="px-6 py-3 bg-primary text-on-primary font-semibold rounded-full hover:shadow-lg transition-all active:scale-95 flex items-center justify-center gap-2">
+                        Xem chi tiết
+                    </button>
+<button class="p-3 text-error hover:bg-error-container/30 rounded-full transition-colors active:scale-95" title="Hủy lịch hẹn">
+<span class="material-symbols-outlined" data-icon="cancel">cancel</span>
+</button>
+</div>
+</div>
+<!-- Active Appointment Card 2 (Pending) -->
+<div class="group relative bg-surface-container-lowest rounded-lg p-8 transition-all duration-300 hover:shadow-[0px_12px_32px_rgba(27,28,28,0.06)] flex flex-col md:flex-row items-center gap-10">
+<div class="relative flex-shrink-0">
+<div class="w-32 h-32 rounded-lg overflow-hidden bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="Professional female doctor smiling warmly in a bright clinic interior, wearing a white lab coat and stethoscope" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAJ1WuSkObNQyQWj0qZ5RVCJ_rPdfdKlwolUmclwVpBAj6sNFxgyDwAzN9fv0mmzFGpWeuSrn816HnITevvq5kAkds7qEnm4SOlRh44bjk75aMXaHQR1jkhKW4szfY4QFpF2bYTqxP799GUdZMYLmgGUn4oNzFj-ISTL0eiAfNoD3fZOtMDI0E2EKF4iAXb2avbUQafv_pwexPr6YM6IoZXuNYmextHJNxrTcA9ol_8Ur-REMvSPkBK-yyEuq_ot43MCwUtfIimi6c"/>
+</div>
+<div class="absolute -bottom-2 -right-2 bg-surface-container-high text-on-surface-variant text-[10px] font-bold px-2 py-1 rounded-full uppercase tracking-wider">
+                        Đang chờ
+                    </div>
+</div>
+<div class="flex-grow space-y-2 text-center md:text-left">
+<p class="text-tertiary font-semibold text-sm tracking-wide">Da liễu</p>
+<h3 class="text-2xl font-bold text-on-surface">BS. Elena Rodriguez</h3>
+<div class="flex flex-wrap items-center justify-center md:justify-start gap-6 pt-2 text-on-surface-variant">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-xl" data-icon="calendar_today">calendar_today</span>
+<span class="font-medium">28 tháng 10, 2024</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-xl" data-icon="schedule">schedule</span>
+<span class="font-medium">02:15 PM — 02:45 PM</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-xl" data-icon="videocam">videocam</span>
+<span class="font-medium text-primary">Tư vấn trực tuyến</span>
+</div>
+</div>
+</div>
+<div class="flex flex-col md:flex-row gap-3 w-full md:w-auto">
+<button class="px-6 py-3 bg-surface-container-low text-on-surface font-semibold rounded-full hover:bg-surface-container-high transition-all active:scale-95">
+                        Hủy yêu cầu
+                    </button>
+<button class="px-6 py-3 bg-primary text-on-primary font-semibold rounded-full hover:shadow-lg transition-all active:scale-95 flex items-center justify-center gap-2">
+                        Xem chi tiết
+                    </button>
+</div>
+</div>
+<!-- Health Tip Bento Fragment (Contextual Information) -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-4">
+<div class="md:col-span-2 bg-indigo-50/50 p-8 rounded-lg flex items-center justify-between border border-indigo-100/30">
+<div class="max-w-md">
+<h4 class="text-xl font-bold text-indigo-900 mb-2">Chuẩn bị cho buổi khám</h4>
+<p class="text-indigo-700/80 text-sm">Xem lại lịch sử triệu chứng và liệt kê các loại thuốc đang dùng để giúp bác sĩ đưa ra đánh giá chính xác nhất.</p>
+<button class="mt-4 text-indigo-600 font-bold text-sm hover:underline flex items-center gap-1">
+                            Danh sách chuẩn bị <span class="material-symbols-outlined text-sm" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+<div class="hidden lg:block text-indigo-200">
+<span class="material-symbols-outlined text-8xl" data-icon="medical_information" style="font-variation-settings: 'wght' 200;">medical_information</span>
+</div>
+</div>
+<div class="bg-surface-container-low p-8 rounded-lg">
+<span class="material-symbols-outlined text-primary mb-4" data-icon="help_outline">help_outline</span>
+<h4 class="font-bold text-on-surface mb-2">Cần hỗ trợ?</h4>
+<p class="text-sm text-on-surface-variant mb-4">Đội ngũ hỗ trợ của chúng tôi sẵn sàng 24/7 cho các thay đổi lịch hẹn khẩn cấp.</p>
+<a class="text-primary font-bold text-sm" href="#">Liên hệ hỗ trợ</a>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="bg-slate-50 w-full rounded-t-[2rem] mt-12">
+<div class="flex flex-col md:flex-row justify-between items-center py-12 px-8 max-w-7xl mx-auto">
+<div class="mb-8 md:mb-0">
+<span class="text-lg font-bold text-indigo-600">Serene Care</span>
+<p class="text-sm font-medium text-slate-500 mt-2">© 2024 Serene Care. Bảo lưu mọi quyền.</p>
+</div>
+<div class="flex gap-8">
+<a class="text-sm font-medium text-slate-500 hover:text-indigo-500 underline-offset-4 hover:underline transition-opacity" href="#">Chính sách bảo mật</a>
+<a class="text-sm font-medium text-slate-500 hover:text-indigo-500 underline-offset-4 hover:underline transition-opacity" href="#">Điều khoản dịch vụ</a>
+<a class="text-sm font-medium text-slate-500 hover:text-indigo-500 underline-offset-4 hover:underline transition-opacity" href="#">Trung tâm trợ giúp</a>
+<a class="text-sm font-medium text-slate-500 hover:text-indigo-500 underline-offset-4 hover:underline transition-opacity" href="#">Tuyển dụng</a>
+</div>
+</div>
+</footer>
+</body></html>
