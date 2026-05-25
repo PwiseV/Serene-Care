@@ -1,7 +1,9 @@
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
 import { getAppointments } from "@/services/bookingService";
+import { getReviewedAppointmentIds } from "@/services/reviewService";
 import CancelButton from "./CancelButton";
+import ReviewButton from "./ReviewButton";
 
 const STATUS_LABELS: Record<string, string> = {
   pending: "Chờ xác nhận",
@@ -22,7 +24,10 @@ export default async function PatientDashboardPage() {
   if (!session?.user) redirect("/login?callbackUrl=/dashboard/patient");
   if (session.user.role !== "patient") redirect("/");
 
-  const appointments = await getAppointments(session.user.id, "patient");
+  const [appointments, reviewedIds] = await Promise.all([
+    getAppointments(session.user.id, "patient"),
+    getReviewedAppointmentIds(session.user.id),
+  ]);
 
   return (
     <main className="pt-24 pb-20 min-h-screen bg-surface">
@@ -83,6 +88,17 @@ export default async function PatientDashboardPage() {
                     <CancelButton appointmentId={apt.id} />
                   )}
                 </div>
+
+                {apt.status === "completed" && !reviewedIds.has(apt.id) && (
+                  <ReviewButton appointmentId={apt.id} />
+                )}
+
+                {apt.status === "completed" && reviewedIds.has(apt.id) && (
+                  <p className="mt-3 pt-3 border-t border-outline-variant/20 text-xs text-on-surface-variant font-sans flex items-center gap-1">
+                    <span className="material-symbols-outlined text-sm text-amber-500" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
+                    Đã đánh giá
+                  </p>
+                )}
               </div>
             ))}
           </div>
