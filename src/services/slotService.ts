@@ -141,6 +141,39 @@ export interface SlotInfo {
 }
 
 /**
+ * Return distinct dates (YYYY-MM-DD UTC) that have at least one available slot
+ * within the next `days` calendar days from today.
+ */
+export async function getAvailableDates(
+  doctorId: string,
+  days: number = 30
+): Promise<string[]> {
+  await dbConnect();
+
+  const from = toDateOnly(new Date());
+  const to = new Date(from);
+  to.setUTCDate(to.getUTCDate() + days - 1);
+
+  const now = new Date();
+
+  const slots: ITimeSlot[] = await TimeSlot.find({
+    doctorId,
+    date: { $gte: from, $lte: to },
+    isBooked: false,
+    $or: [{ lockedUntil: null }, { lockedUntil: { $lt: now } }],
+  })
+    .select("date")
+    .sort({ date: 1 })
+    .lean();
+
+  const seen = new Set<string>();
+  for (const s of slots) {
+    seen.add(s.date.toISOString().slice(0, 10));
+  }
+  return Array.from(seen);
+}
+
+/**
  * Return all slots for a doctor on a specific date.
  * "Available" = not booked AND (lockedUntil is null OR lockedUntil has expired).
  */

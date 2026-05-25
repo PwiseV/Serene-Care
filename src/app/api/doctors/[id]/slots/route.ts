@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getSlotsByDate } from "@/services/slotService";
+import { getSlotsByDate, getAvailableDates } from "@/services/slotService";
 
 export async function GET(
   req: NextRequest,
@@ -9,11 +9,10 @@ export async function GET(
     const { id } = await params;
     const dateParam = req.nextUrl.searchParams.get("date");
 
+    // No date param → return list of dates that have available slots (next 30 days)
     if (!dateParam) {
-      return NextResponse.json(
-        { error: "Query param 'date' is required (YYYY-MM-DD)" },
-        { status: 400 }
-      );
+      const dates = await getAvailableDates(id, 30);
+      return NextResponse.json({ dates });
     }
 
     const date = new Date(dateParam);
