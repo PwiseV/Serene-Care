@@ -4,6 +4,7 @@ import { getAppointments } from "@/services/bookingService";
 import { getReviewedAppointmentIds } from "@/services/reviewService";
 import CancelButton from "./CancelButton";
 import ReviewButton from "./ReviewButton";
+import HealthRecordsSection from "./HealthRecordsSection";
 
 const STATUS_LABELS: Record<string, string> = {
   pending: "Chờ xác nhận",
@@ -103,6 +104,7 @@ export default async function PatientDashboardPage() {
             ))}
           </div>
         )}
+        <HealthRecordsSection />
       </div>
     </main>
   );
