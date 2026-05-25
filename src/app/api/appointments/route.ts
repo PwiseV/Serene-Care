@@ -1,8 +1,29 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
-import { lockSlot } from "@/services/bookingService";
+import { lockSlot, getAppointments } from "@/services/bookingService";
 import dbConnect from "@/lib/mongoose";
 import Appointment from "@/models/Appointment";
+
+export async function GET(_req: NextRequest) {
+  try {
+    const session = await auth();
+    if (!session?.user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+    if (session.user.role === "admin") {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
+
+    const appointments = await getAppointments(
+      session.user.id,
+      session.user.role as "patient" | "doctor"
+    );
+    return NextResponse.json({ appointments });
+  } catch (error) {
+    console.error("GET /api/appointments error:", error);
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+  }
+}
 
 export async function POST(req: NextRequest) {
   try {

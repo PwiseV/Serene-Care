@@ -144,6 +144,40 @@ export async function getDoctorById(userId: string): Promise<DoctorDetail | null
   };
 }
 
+export interface MyProfile {
+  specialtyId: string;
+  bio: string;
+  experienceYears: number;
+  licenseNumber: string;
+  consultationFee: number;
+  education: { degree: string; institution: string; year: number }[];
+  workingHours: {
+    dayOfWeek: number;
+    startTime: string;
+    endTime: string;
+    slotDurationMinutes: number;
+  }[];
+  averageRating: number;
+  totalReviews: number;
+}
+
+export async function getMyProfile(userId: string): Promise<MyProfile | null> {
+  await dbConnect();
+  const profile = await DoctorProfile.findOne({ userId }).lean();
+  if (!profile) return null;
+  return {
+    specialtyId: profile.specialtyId.toString(),
+    bio: profile.bio,
+    experienceYears: profile.experienceYears,
+    licenseNumber: profile.licenseNumber,
+    consultationFee: profile.consultationFee,
+    education: profile.education,
+    workingHours: profile.workingHours,
+    averageRating: profile.averageRating,
+    totalReviews: profile.totalReviews,
+  };
+}
+
 export interface UpsertProfilePayload {
   specialtyId: string;
   bio?: string;

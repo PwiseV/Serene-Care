@@ -1,6 +1,55 @@
 import dbConnect from "@/lib/mongoose";
 import Appointment from "@/models/Appointment";
+import type { AppointmentStatus, PaymentStatus } from "@/models/Appointment";
 import TimeSlot, { ITimeSlot } from "@/models/TimeSlot";
+
+export interface AppointmentItem {
+  id: string;
+  status: AppointmentStatus;
+  paymentStatus: PaymentStatus;
+  patientNote: string;
+  doctorNote: string;
+  createdAt: string;
+  slot: { date: string; startTime: string; endTime: string } | null;
+  doctor: { id: string; name: string };
+  patient: { id: string; name: string };
+}
+
+export async function getAppointments(
+  userId: string,
+  role: "patient" | "doctor" | "admin"
+): Promise<AppointmentItem[]> {
+  await dbConnect();
+
+  const query = role === "patient" ? { patientId: userId } : { doctorId: userId };
+
+  const appointments = await Appointment.find(query)
+    .populate("slotId", "date startTime endTime")
+    .populate("patientId", "name")
+    .populate("doctorId", "name")
+    .sort({ createdAt: -1 })
+    .lean();
+
+  return appointments.map((apt) => {
+    const slot = apt.slotId as unknown as { date: Date; startTime: string; endTime: string } | null;
+    const doctor = apt.doctorId as unknown as { _id: { toString(): string }; name: string };
+    const patient = apt.patientId as unknown as { _id: { toString(): string }; name: string };
+
+    return {
+      id: apt._id.toString(),
+      status: apt.status,
+      paymentStatus: apt.paymentStatus,
+      patientNote: apt.patientNote,
+      doctorNote: apt.doctorNote,
+      createdAt: apt.createdAt.toISOString(),
+      slot: slot
+        ? { date: slot.date.toISOString(), startTime: slot.startTime, endTime: slot.endTime }
+        : null,
+      doctor: { id: doctor._id.toString(), name: doctor.name },
+      patient: { id: patient._id.toString(), name: patient.name },
+    };
+  });
+}
 
 const LOCK_DURATION_MS = 5 * 60 * 1000; // 5 minutes
 

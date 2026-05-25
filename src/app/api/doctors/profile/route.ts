@@ -1,6 +1,24 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
-import { upsertDoctorProfile } from "@/services/doctorService";
+import { upsertDoctorProfile, getMyProfile } from "@/services/doctorService";
+
+export async function GET(_req: NextRequest) {
+  try {
+    const session = await auth();
+    if (!session?.user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+    if (session.user.role !== "doctor") {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
+
+    const profile = await getMyProfile(session.user.id);
+    return NextResponse.json({ profile });
+  } catch (error) {
+    console.error("GET /api/doctors/profile error:", error);
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+  }
+}
 
 export async function POST(req: NextRequest) {
   try {
