@@ -12,21 +12,21 @@ export default async function AdminDoctorsPage() {
   const doctors = await getPendingDoctors();
 
   return (
-    <main className="pt-24 pb-20 min-h-screen bg-surface">
-      <div className="max-w-4xl mx-auto px-6">
-        <div className="flex items-center gap-3 mb-8">
-          <Link
-            href="/dashboard/admin"
-            className="p-2 rounded-full hover:bg-surface-container transition-colors"
-          >
-            <span className="material-symbols-outlined text-on-surface-variant">arrow_back</span>
-          </Link>
+    <div className="space-y-6">
+        <div className="flex items-center justify-between gap-3">
           <div>
             <h1 className="text-3xl font-extrabold font-heading">Duyệt hồ sơ bác sĩ</h1>
             <p className="text-on-surface-variant font-sans text-sm mt-0.5">
               {doctors.length} hồ sơ đang chờ xét duyệt
             </p>
           </div>
+          <Link
+            href="/dashboard/admin/specialties"
+            className="flex items-center gap-2 rounded-full bg-surface-container px-4 py-2 text-sm font-semibold font-sans text-on-surface hover:bg-surface-container-high transition-colors"
+          >
+            <span className="material-symbols-outlined text-[18px]">category</span>
+            Quản lý chuyên khoa
+          </Link>
         </div>
 
         {doctors.length === 0 ? (
@@ -105,7 +105,6 @@ export default async function AdminDoctorsPage() {
             ))}
           </div>
         )}
-      </div>
-    </main>
+    </div>
   );
 }

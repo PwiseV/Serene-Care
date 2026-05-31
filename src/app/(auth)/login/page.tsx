@@ -43,8 +43,9 @@ export default function LoginPage() {
       if (res?.error) {
         setErrorMsg("Email hoặc mật khẩu không chính xác");
       } else {
-        // Redirect logic can be added here or handled by middleware
-        router.push("/");
+        const params = new URLSearchParams(window.location.search);
+        const callbackUrl = params.get("callbackUrl");
+        router.push(callbackUrl ?? "/dashboard");
         router.refresh();
       }
     } catch (error) {

@@ -66,14 +66,34 @@ export default function Header({ session }: { session: any }) {
                     </p>
                   </div>
                   <div className="py-2">
-                    <Link
-                      href="/dashboard/patient"
-                      className="block px-4 py-2 text-sm text-on-surface hover:bg-surface-container-low transition-colors font-medium flex items-center gap-2"
-                      onClick={() => setIsDropdownOpen(false)}
-                    >
-                      <span className="material-symbols-outlined text-[18px]">calendar_month</span>
-                      Lịch khám của tôi
-                    </Link>
+                    {session.user?.role === "admin" ? (
+                      <Link
+                        href="/dashboard/admin"
+                        className="block px-4 py-2 text-sm text-on-surface hover:bg-surface-container-low transition-colors font-medium flex items-center gap-2"
+                        onClick={() => setIsDropdownOpen(false)}
+                      >
+                        <span className="material-symbols-outlined text-[18px]">admin_panel_settings</span>
+                        Quản trị hệ thống
+                      </Link>
+                    ) : session.user?.role === "doctor" ? (
+                      <Link
+                        href="/dashboard/doctor"
+                        className="block px-4 py-2 text-sm text-on-surface hover:bg-surface-container-low transition-colors font-medium flex items-center gap-2"
+                        onClick={() => setIsDropdownOpen(false)}
+                      >
+                        <span className="material-symbols-outlined text-[18px]">dashboard</span>
+                        Bảng điều khiển
+                      </Link>
+                    ) : (
+                      <Link
+                        href="/dashboard/patient"
+                        className="block px-4 py-2 text-sm text-on-surface hover:bg-surface-container-low transition-colors font-medium flex items-center gap-2"
+                        onClick={() => setIsDropdownOpen(false)}
+                      >
+                        <span className="material-symbols-outlined text-[18px]">calendar_month</span>
+                        Lịch khám của tôi
+                      </Link>
+                    )}
                     <Link
                       href="/settings"
                       className="block px-4 py-2 text-sm text-on-surface hover:bg-surface-container-low transition-colors font-medium flex items-center gap-2"

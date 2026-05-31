@@ -155,12 +155,18 @@ export async function getAvailableDates(
   to.setUTCDate(to.getUTCDate() + days - 1);
 
   const now = new Date();
+  // "HH:MM" in UTC — slots whose startTime has already passed today are skipped
+  const currentHHMM = `${String(now.getUTCHours()).padStart(2, "0")}:${String(now.getUTCMinutes()).padStart(2, "0")}`;
 
   const slots: ITimeSlot[] = await TimeSlot.find({
     doctorId,
     date: { $gte: from, $lte: to },
     isBooked: false,
-    $or: [{ lockedUntil: null }, { lockedUntil: { $lt: now } }],
+    $and: [
+      { $or: [{ lockedUntil: null }, { lockedUntil: { $lt: now } }] },
+      // For today: only include slots whose startTime hasn't passed yet
+      { $or: [{ date: { $gt: from } }, { startTime: { $gt: currentHHMM } }] },
+    ],
   })
     .select("date")
     .sort({ date: 1 })
@@ -193,6 +199,8 @@ export async function getSlotsByDate(
     .lean();
 
   const now = new Date();
+  const isToday = day.getTime() === toDateOnly(now).getTime();
+  const currentHHMM = `${String(now.getUTCHours()).padStart(2, "0")}:${String(now.getUTCMinutes()).padStart(2, "0")}`;
 
   return slots.map((s) => ({
     id: s._id.toString(),
@@ -200,6 +208,8 @@ export async function getSlotsByDate(
     startTime: s.startTime,
     endTime: s.endTime,
     isAvailable:
-      !s.isBooked && (s.lockedUntil === null || s.lockedUntil < now),
+      !s.isBooked &&
+      (s.lockedUntil === null || s.lockedUntil < now) &&
+      (!isToday || s.startTime > currentHHMM),
   }));
 }

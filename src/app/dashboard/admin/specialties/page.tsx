@@ -116,11 +116,11 @@ export default function AdminSpecialtiesPage() {
   }
 
   return (
-    <main className="pt-24 pb-20 min-h-screen bg-surface">
-      <div className="max-w-3xl mx-auto px-6">
+    <div>
+      <div className="max-w-3xl">
         <div className="flex items-center gap-3 mb-8">
           <Link
-            href="/dashboard/admin"
+            href="/dashboard/admin/doctors"
             className="p-2 rounded-full hover:bg-surface-container transition-colors"
           >
             <span className="material-symbols-outlined text-on-surface-variant">arrow_back</span>
@@ -258,7 +258,7 @@ export default function AdminSpecialtiesPage() {
           </div>
         )}
       </div>
-    </main>
+    </div>
   );
 }
 

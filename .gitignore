@@ -42,3 +42,5 @@ next-env.d.ts
 PROJECT_CONTEXT.md
 .gitignore
 SKILLS.md
+scripts/create-users.mjs
+scripts/seed.mjs

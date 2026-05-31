@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import Link from "next/link";
 import { auth } from "@/auth";
 import { getAppointments } from "@/services/bookingService";
 import { getReviewedAppointmentIds } from "@/services/reviewService";
@@ -85,9 +86,19 @@ export default async function PatientDashboardPage() {
                     )}
                   </div>
 
-                  {(apt.status === "pending" || apt.status === "confirmed") && (
-                    <CancelButton appointmentId={apt.id} />
-                  )}
+                  <div className="flex items-center gap-2 flex-shrink-0">
+                    {(apt.status === "pending" || apt.status === "confirmed") && (
+                      <CancelButton appointmentId={apt.id} />
+                    )}
+                    {apt.status === "cancelled" && (
+                      <Link
+                        href={`/appointments/new?doctorId=${apt.doctor.id}`}
+                        className="px-4 py-2 rounded-full border border-primary text-primary text-sm font-bold font-sans hover:bg-primary/10 transition-colors"
+                      >
+                        Đặt lại
+                      </Link>
+                    )}
+                  </div>
                 </div>
 
                 {apt.status === "completed" && !reviewedIds.has(apt.id) && (
