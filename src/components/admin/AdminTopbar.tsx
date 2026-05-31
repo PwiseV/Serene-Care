@@ -145,7 +145,9 @@ export default function AdminTopbar({
                     label="Bác sĩ"
                     icon="stethoscope"
                     items={results!.doctors}
-                    onPick={() => goto("/dashboard/admin/doctors")}
+                    onPick={(name) =>
+                      goto(`/dashboard/admin/doctors?q=${encodeURIComponent(name)}`)
+                    }
                   />
                 )}
                 {results!.patients.length > 0 && (
@@ -153,7 +155,9 @@ export default function AdminTopbar({
                     label="Bệnh nhân"
                     icon="person"
                     items={results!.patients}
-                    onPick={() => goto("/dashboard/admin/patients")}
+                    onPick={(name) =>
+                      goto(`/dashboard/admin/patients?q=${encodeURIComponent(name)}`)
+                    }
                   />
                 )}
               </>
@@ -268,7 +272,7 @@ function SearchGroup({
   label: string;
   icon: string;
   items: { id: string; name: string; email: string }[];
-  onPick: () => void;
+  onPick: (name: string) => void;
 }) {
   return (
     <div className="py-1">
@@ -278,7 +282,7 @@ function SearchGroup({
       {items.map((item) => (
         <button
           key={item.id}
-          onClick={onPick}
+          onClick={() => onPick(item.name)}
           className="flex w-full items-center gap-3 px-4 py-2 text-left hover:bg-surface-container-low transition-colors"
         >
           <span className="material-symbols-outlined text-on-surface-variant text-[20px]">

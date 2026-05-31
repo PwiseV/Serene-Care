@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
 import dbConnect from "@/lib/mongoose";
 import Specialty from "@/models/Specialty";
+import { logAudit } from "@/services/adminService";
+import type { Session } from "next-auth";
 
 function toSlug(name: string): string {
   return name
@@ -14,16 +16,16 @@ function toSlug(name: string): string {
     .replace(/\s+/g, "-");
 }
 
-async function requireAdmin(req: NextRequest) {
+async function requireAdmin(): Promise<Session | NextResponse> {
   const session = await auth();
   if (!session?.user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   if (session.user.role !== "admin") return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-  return null;
+  return session;
 }
 
-export async function GET(req: NextRequest) {
-  const guard = await requireAdmin(req);
-  if (guard) return guard;
+export async function GET() {
+  const guard = await requireAdmin();
+  if (guard instanceof NextResponse) return guard;
 
   try {
     await dbConnect();
@@ -36,8 +38,8 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
-  const guard = await requireAdmin(req);
-  if (guard) return guard;
+  const guard = await requireAdmin();
+  if (guard instanceof NextResponse) return guard;
 
   try {
     await dbConnect();
@@ -54,6 +56,15 @@ export async function POST(req: NextRequest) {
       slug,
       icon: icon ?? "",
       description: description ?? "",
+    });
+
+    await logAudit({
+      actorId: guard.user.id,
+      actorName: guard.user.name ?? "Admin",
+      action: "specialty.create",
+      targetType: "Specialty",
+      targetId: specialty._id.toString(),
+      summary: `Thêm chuyên khoa "${specialty.name}"`,
     });
 
     return NextResponse.json({ specialty }, { status: 201 });

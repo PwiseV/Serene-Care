@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 import { auth } from "@/auth";
 import dbConnect from "@/lib/mongoose";
 import User from "@/models/User";
+import { logAudit } from "@/services/adminService";
 
 export async function PATCH(req: NextRequest) {
   try {
@@ -52,6 +53,25 @@ export async function PATCH(req: NextRequest) {
     }
 
     await user.save();
+
+    // Record admin self-edits for the settings change history
+    if (session.user.role === "admin") {
+      const changed = [
+        name !== undefined ? "thông tin cá nhân" : null,
+        newPassword !== undefined ? "mật khẩu" : null,
+      ].filter(Boolean);
+      if (changed.length > 0) {
+        await logAudit({
+          actorId: session.user.id,
+          actorName: user.name,
+          action: "profile.update",
+          targetType: "Profile",
+          targetId: session.user.id,
+          summary: `Cập nhật ${changed.join(" và ")}`,
+        });
+      }
+    }
+
     return NextResponse.json({ name: user.name });
   } catch (error) {
     console.error("PATCH /api/user/me error:", error);

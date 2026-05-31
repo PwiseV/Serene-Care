@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
 import dbConnect from "@/lib/mongoose";
 import Specialty from "@/models/Specialty";
+import { logAudit } from "@/services/adminService";
+import type { Session } from "next-auth";
 
 function toSlug(name: string): string {
   return name
@@ -14,11 +16,11 @@ function toSlug(name: string): string {
     .replace(/\s+/g, "-");
 }
 
-async function requireAdmin() {
+async function requireAdmin(): Promise<Session | NextResponse> {
   const session = await auth();
   if (!session?.user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   if (session.user.role !== "admin") return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-  return null;
+  return session;
 }
 
 export async function PUT(
@@ -26,7 +28,7 @@ export async function PUT(
   { params }: { params: Promise<{ id: string }> }
 ) {
   const guard = await requireAdmin();
-  if (guard) return guard;
+  if (guard instanceof NextResponse) return guard;
 
   try {
     await dbConnect();
@@ -48,6 +50,15 @@ export async function PUT(
       return NextResponse.json({ error: "Specialty not found" }, { status: 404 });
     }
 
+    await logAudit({
+      actorId: guard.user.id,
+      actorName: guard.user.name ?? "Admin",
+      action: "specialty.update",
+      targetType: "Specialty",
+      targetId: id,
+      summary: `Cập nhật chuyên khoa "${updated.name}"`,
+    });
+
     return NextResponse.json({ specialty: updated });
   } catch (error: unknown) {
     const msg = error instanceof Error ? error.message : "";
@@ -64,7 +75,7 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   const guard = await requireAdmin();
-  if (guard) return guard;
+  if (guard instanceof NextResponse) return guard;
 
   try {
     await dbConnect();
@@ -74,6 +85,15 @@ export async function DELETE(
     if (!deleted) {
       return NextResponse.json({ error: "Specialty not found" }, { status: 404 });
     }
+
+    await logAudit({
+      actorId: guard.user.id,
+      actorName: guard.user.name ?? "Admin",
+      action: "specialty.delete",
+      targetType: "Specialty",
+      targetId: id,
+      summary: `Xoá chuyên khoa "${deleted.name}"`,
+    });
 
     return NextResponse.json({ success: true });
   } catch (error) {

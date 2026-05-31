@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
-import { setDoctorApproval } from "@/services/adminService";
+import { setDoctorApproval, logAudit } from "@/services/adminService";
 
 export async function PATCH(
   req: NextRequest,
@@ -27,6 +27,15 @@ export async function PATCH(
     if (!modified) {
       return NextResponse.json({ error: "Doctor not found" }, { status: 404 });
     }
+
+    await logAudit({
+      actorId: session.user.id,
+      actorName: session.user.name ?? "Admin",
+      action: approved ? "doctor.approve" : "doctor.reject",
+      targetType: "Doctor",
+      targetId: id,
+      summary: approved ? "Duyệt hồ sơ bác sĩ" : "Từ chối hồ sơ bác sĩ",
+    });
 
     return NextResponse.json({ success: true });
   } catch (error) {
