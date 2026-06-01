@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 
 const DAY_NAMES = ["Chủ nhật", "Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6", "Thứ 7"];
 
@@ -147,29 +146,23 @@ export default function DoctorProfilePage() {
 
   if (loading) {
     return (
-      <main className="pt-24 pb-20 min-h-screen bg-surface flex items-center justify-center">
+      <div className="flex min-h-[60vh] items-center justify-center">
         <span className="material-symbols-outlined text-4xl text-outline animate-spin">
           progress_activity
         </span>
-      </main>
+      </div>
     );
   }
 
   return (
-    <main className="pt-24 pb-20 min-h-screen bg-surface">
-      <div className="max-w-2xl mx-auto px-6">
+    <div className="max-w-2xl">
+      <div>
         {/* Header */}
-        <div className="flex items-center gap-3 mb-8">
-          <Link
-            href="/dashboard/doctor"
-            className="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center hover:bg-surface-container-high transition-colors"
-          >
-            <span className="material-symbols-outlined text-xl">arrow_back</span>
-          </Link>
-          <div>
-            <h1 className="text-2xl font-extrabold font-heading">Cập nhật hồ sơ</h1>
-            <p className="text-on-surface-variant font-sans text-sm">Thông tin hành nghề của bạn</p>
-          </div>
+        <div className="mb-8">
+          <h1 className="text-3xl font-extrabold font-heading text-on-surface">Hồ sơ bác sĩ</h1>
+          <p className="text-on-surface-variant font-sans text-sm mt-1">
+            Thông tin hành nghề của bạn — hiển thị cho bệnh nhân.
+          </p>
         </div>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-6">
@@ -403,6 +396,6 @@ export default function DoctorProfilePage() {
           </button>
         </form>
       </div>
-    </main>
+    </div>
   );
 }

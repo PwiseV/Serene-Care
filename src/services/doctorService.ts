@@ -1,7 +1,10 @@
+import { Types, type PipelineStage } from "mongoose";
 import dbConnect from "@/lib/mongoose";
 import DoctorProfile, { IDoctorProfile } from "@/models/DoctorProfile";
 import Review from "@/models/Review";
 import User from "@/models/User";
+import Appointment from "@/models/Appointment";
+import type { AppointmentStatus } from "@/models/Appointment";
 
 export interface DoctorListItem {
   id: string;
@@ -206,4 +209,128 @@ export async function upsertDoctorProfile(
   );
 
   return profile;
+}
+
+/* -------------------------------------------------------------------------- */
+/*  Doctor workspace: notifications + patients                                 */
+/* -------------------------------------------------------------------------- */
+
+export interface DoctorNotification {
+  id: string;
+  patientName: string;
+  date: string | null;
+  startTime: string;
+  createdAt: string;
+}
+
+/** Pending appointments (new bookings) awaiting this doctor's confirmation. */
+export async function getDoctorNotifications(
+  doctorId: string
+): Promise<{ items: DoctorNotification[]; total: number }> {
+  await dbConnect();
+
+  const docs = await Appointment.find({ doctorId, status: "pending" })
+    .populate("patientId", "name")
+    .populate("slotId", "date startTime")
+    .sort({ createdAt: -1 })
+    .limit(10)
+    .lean();
+
+  const items = docs.map((a) => {
+    const patient = a.patientId as unknown as { name: string } | null;
+    const slot = a.slotId as unknown as { date: Date; startTime: string } | null;
+    return {
+      id: a._id.toString(),
+      patientName: patient?.name ?? "—",
+      date: slot?.date ? slot.date.toISOString() : null,
+      startTime: slot?.startTime ?? "",
+      createdAt: a.createdAt.toISOString(),
+    };
+  });
+
+  return { items, total: items.length };
+}
+
+export interface DoctorPatientRow {
+  id: string;
+  name: string;
+  email: string;
+  visitCount: number;
+  lastVisit: string | null;
+  lastStatus: AppointmentStatus | null;
+}
+
+export interface DoctorPatientsResult {
+  rows: DoctorPatientRow[];
+  total: number;
+  page: number;
+  totalPages: number;
+}
+
+/** Distinct patients who have booked this doctor, with visit count + last visit. */
+export async function getDoctorPatients(
+  doctorId: string,
+  filters: { q?: string; page?: number; limit?: number } = {}
+): Promise<DoctorPatientsResult> {
+  await dbConnect();
+
+  const limit = filters.limit ?? 10;
+  const page = Math.max(1, filters.page ?? 1);
+  const skip = (page - 1) * limit;
+
+  const pipeline: PipelineStage[] = [
+    { $match: { doctorId: new Types.ObjectId(doctorId) } },
+    { $lookup: { from: "timeslots", localField: "slotId", foreignField: "_id", as: "slot" } },
+    { $unwind: { path: "$slot", preserveNullAndEmptyArrays: true } },
+    { $sort: { "slot.date": -1 } },
+    {
+      $group: {
+        _id: "$patientId",
+        visitCount: { $sum: 1 },
+        lastVisit: { $first: "$slot.date" },
+        lastStatus: { $first: "$status" },
+      },
+    },
+    { $lookup: { from: "users", localField: "_id", foreignField: "_id", as: "patient" } },
+    { $unwind: "$patient" },
+  ];
+
+  if (filters.q?.trim()) {
+    const regex = { $regex: filters.q.trim(), $options: "i" };
+    pipeline.push({ $match: { $or: [{ "patient.name": regex }, { "patient.email": regex }] } });
+  }
+
+  pipeline.push({ $sort: { lastVisit: -1 } });
+  pipeline.push({
+    $facet: {
+      rows: [{ $skip: skip }, { $limit: limit }],
+      total: [{ $count: "count" }],
+    },
+  });
+
+  const [result] = await Appointment.aggregate(pipeline);
+  const rawRows = (result?.rows ?? []) as Array<{
+    _id: Types.ObjectId;
+    visitCount: number;
+    lastVisit?: Date;
+    lastStatus?: AppointmentStatus;
+    patient: { name: string; email: string };
+  }>;
+  const total = (result?.total?.[0]?.count ?? 0) as number;
+
+  const rows: DoctorPatientRow[] = rawRows.map((r) => ({
+    id: r._id.toString(),
+    name: r.patient.name,
+    email: r.patient.email,
+    visitCount: r.visitCount,
+    lastVisit: r.lastVisit ? new Date(r.lastVisit).toISOString() : null,
+    lastStatus: r.lastStatus ?? null,
+  }));
+
+  return {
+    rows,
+    total,
+    page,
+    totalPages: Math.max(1, Math.ceil(total / limit)),
+  };
 }

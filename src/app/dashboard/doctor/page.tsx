@@ -3,169 +3,217 @@ import Link from "next/link";
 import { auth } from "@/auth";
 import { getAppointments } from "@/services/bookingService";
 import { getMyProfile } from "@/services/doctorService";
-import ConfirmButton from "./ConfirmButton";
+import { getReviewsByDoctor } from "@/services/reviewService";
+import type { AppointmentStatus } from "@/models/Appointment";
+import DoctorAppointmentActions from "@/components/doctor/DoctorAppointmentActions";
 
-const STATUS_LABELS: Record<string, string> = {
-  pending: "Chờ xác nhận",
-  confirmed: "Đã xác nhận",
-  cancelled: "Đã huỷ",
-  completed: "Hoàn thành",
+const STATUS_META: Record<AppointmentStatus, { label: string; cls: string }> = {
+  pending: { label: "Chờ xác nhận", cls: "bg-amber-100 text-amber-700" },
+  confirmed: { label: "Đã xác nhận", cls: "bg-secondary-container text-on-secondary-container" },
+  completed: { label: "Hoàn thành", cls: "bg-tertiary-container text-on-tertiary-container" },
+  cancelled: { label: "Đã huỷ", cls: "bg-error-container text-on-error-container" },
 };
 
-const STATUS_COLORS: Record<string, string> = {
-  pending: "bg-amber-100 text-amber-700",
-  confirmed: "bg-green-100 text-green-700",
-  cancelled: "bg-red-100 text-red-600",
-  completed: "bg-blue-100 text-blue-700",
-};
+function greeting() {
+  const h = new Date().getHours();
+  if (h < 11) return "Chào buổi sáng";
+  if (h < 18) return "Chào buổi chiều";
+  return "Chào buổi tối";
+}
+
+const WEEKDAY_LABELS = ["CN", "T2", "T3", "T4", "T5", "T6", "T7"];
 
 export default async function DoctorDashboardPage() {
   const session = await auth();
   if (!session?.user) redirect("/login?callbackUrl=/dashboard/doctor");
   if (session.user.role !== "doctor") redirect("/");
 
-  const [appointments, profile] = await Promise.all([
+  const [appointments, profile, reviewsData] = await Promise.all([
     getAppointments(session.user.id, "doctor"),
     getMyProfile(session.user.id),
+    getReviewsByDoctor(session.user.id, 1, 3),
   ]);
 
   const todayUTC = new Date().toISOString().slice(0, 10);
   const todayAppointments = appointments
-    .filter((apt) => apt.slot?.date.slice(0, 10) === todayUTC)
+    .filter((a) => a.slot?.date.slice(0, 10) === todayUTC)
     .sort((a, b) => (a.slot?.startTime ?? "").localeCompare(b.slot?.startTime ?? ""));
 
-  const completedCount = appointments.filter((a) => a.status === "completed").length;
   const pendingCount = appointments.filter((a) => a.status === "pending").length;
+  const completedCount = appointments.filter((a) => a.status === "completed").length;
   const revenue = profile ? completedCount * profile.consultationFee : 0;
 
+  // Weekly chart: appointment count per day for the last 7 days (by slot date)
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const weekly = Array.from({ length: 7 }, (_, i) => {
+    const day = new Date(today.getTime() - (6 - i) * 86400000);
+    const key = day.toISOString().slice(0, 10);
+    const count = appointments.filter((a) => a.slot?.date.slice(0, 10) === key).length;
+    return { label: WEEKDAY_LABELS[day.getDay()], count };
+  });
+  const maxWeekly = Math.max(1, ...weekly.map((d) => d.count));
+  const hasWeekly = weekly.some((d) => d.count > 0);
+
+  const cards = [
+    { label: "Lịch hôm nay", value: todayAppointments.length, icon: "today", color: "text-primary", bg: "bg-primary/10" },
+    { label: "Chờ xác nhận", value: pendingCount, icon: "schedule", color: "text-amber-600", bg: "bg-amber-500/10" },
+    { label: "Đã hoàn thành", value: completedCount, icon: "task_alt", color: "text-tertiary", bg: "bg-tertiary/10" },
+    {
+      label: "Doanh thu (ước)",
+      value: `${(revenue * 1000).toLocaleString("vi-VN")}₫`,
+      icon: "payments",
+      highlight: true,
+    },
+  ];
+
   return (
-    <main className="pt-24 pb-20 min-h-screen bg-surface">
-      <div className="max-w-5xl mx-auto px-6">
-        {/* Header */}
-        <div className="flex items-start justify-between mb-8">
-          <div>
-            <h1 className="text-3xl font-extrabold font-heading mb-1">Bảng điều khiển</h1>
-            <p className="text-on-surface-variant font-sans text-sm">
-              Chào mừng, Bs. {session.user.name}
-            </p>
-          </div>
+    <div className="space-y-8">
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <h1 className="text-3xl font-extrabold font-heading text-on-surface">
+            {greeting()}, Bs. {session.user.name?.split(" ").slice(-1)[0]}.
+          </h1>
+          <p className="mt-1 text-sm text-on-surface-variant font-sans">
+            Hôm nay bạn có {todayAppointments.length} lịch khám.
+          </p>
+        </div>
+        {!profile && (
           <Link
             href="/dashboard/doctor/profile"
-            className="px-5 py-2 rounded-full bg-surface-container border border-outline-variant text-sm font-bold font-sans hover:bg-surface-container-high transition-colors flex items-center gap-2"
+            className="flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-bold font-sans text-on-primary transition-opacity hover:opacity-90"
           >
-            <span className="material-symbols-outlined text-base leading-none">edit</span>
-            Cập nhật hồ sơ
+            <span className="material-symbols-outlined text-[18px]">badge</span>
+            Hoàn thiện hồ sơ
           </Link>
-        </div>
+        )}
+      </div>
 
-        {/* Stats */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-          {[
-            { label: "Tổng lịch hẹn", value: appointments.length, icon: "calendar_month", color: "text-primary" },
-            { label: "Chờ xác nhận", value: pendingCount, icon: "pending", color: "text-amber-600" },
-            { label: "Đã hoàn thành", value: completedCount, icon: "check_circle", color: "text-green-600" },
-            {
-              label: "Doanh thu (ước)",
-              value: `${revenue.toLocaleString("vi-VN")}k`,
-              icon: "payments",
-              color: "text-secondary",
-            },
-          ].map((stat) => (
+      {/* Stat cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        {cards.map((c) => (
+          <div
+            key={c.label}
+            className={`rounded-2xl p-5 shadow-xl shadow-indigo-500/5 ${
+              c.highlight ? "bg-gradient-primary" : "bg-surface-container-lowest"
+            }`}
+          >
             <div
-              key={stat.label}
-              className="bg-surface-container-lowest rounded-2xl p-5 shadow-xl shadow-indigo-500/5"
+              className={`mb-4 flex h-10 w-10 items-center justify-center rounded-xl ${
+                c.highlight ? "bg-white/20" : c.bg
+              }`}
             >
-              <span className={`material-symbols-outlined text-2xl ${stat.color} mb-2 block`}>
-                {stat.icon}
+              <span
+                className={`material-symbols-outlined text-[22px] ${
+                  c.highlight ? "text-on-primary" : c.color
+                }`}
+              >
+                {c.icon}
               </span>
-              <p className="text-2xl font-extrabold font-sans text-on-surface">{stat.value}</p>
-              <p className="text-xs text-on-surface-variant font-sans mt-1">{stat.label}</p>
             </div>
-          ))}
-        </div>
+            <p
+              className={`text-2xl font-extrabold font-sans ${
+                c.highlight ? "text-on-primary" : "text-on-surface"
+              }`}
+            >
+              {c.value}
+            </p>
+            <p
+              className={`mt-1 text-xs font-sans ${
+                c.highlight ? "text-on-primary/80" : "text-on-surface-variant"
+              }`}
+            >
+              {c.label}
+            </p>
+          </div>
+        ))}
+      </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Today's appointments */}
-          <div className="bg-surface-container-lowest rounded-2xl p-6 shadow-xl shadow-indigo-500/5">
-            <h2 className="text-lg font-bold font-heading mb-4">
-              Lịch hẹn hôm nay
-              <span className="ml-2 text-sm font-normal text-on-surface-variant">
-                ({todayAppointments.length})
-              </span>
-            </h2>
-
-            {todayAppointments.length === 0 ? (
-              <p className="text-on-surface-variant font-sans text-sm">Không có lịch hẹn hôm nay.</p>
-            ) : (
-              <div className="flex flex-col gap-1">
-                {todayAppointments.map((apt) => (
-                  <div
-                    key={apt.id}
-                    className="flex items-center justify-between py-3 border-b border-outline-variant/20 last:border-0"
-                  >
-                    <div className="flex items-center gap-3 min-w-0">
-                      <span className="w-16 text-sm font-bold text-primary font-sans flex-shrink-0">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Today's schedule */}
+        <div className="lg:col-span-2 rounded-2xl bg-surface-container-lowest p-6 shadow-xl shadow-indigo-500/5">
+          <div className="mb-4 flex items-center justify-between">
+            <h2 className="font-bold font-heading text-on-surface">Lịch khám hôm nay</h2>
+            <Link
+              href="/dashboard/doctor/schedule"
+              className="text-sm font-semibold font-sans text-primary hover:underline"
+            >
+              Xem lịch khám
+            </Link>
+          </div>
+          {todayAppointments.length === 0 ? (
+            <p className="py-10 text-center text-sm text-on-surface-variant font-sans">
+              Không có lịch khám hôm nay.
+            </p>
+          ) : (
+            <div className="divide-y divide-outline-variant/20">
+              {todayAppointments.map((apt) => {
+                const meta = STATUS_META[apt.status];
+                return (
+                  <div key={apt.id} className="flex items-center justify-between gap-3 py-3">
+                    <div className="flex min-w-0 items-center gap-3">
+                      <span className="w-14 flex-shrink-0 text-sm font-bold font-sans text-primary">
                         {apt.slot?.startTime}
                       </span>
                       <div className="min-w-0">
-                        <p className="font-bold text-on-surface font-sans text-sm truncate">
+                        <p className="truncate text-sm font-semibold font-sans text-on-surface">
                           {apt.patient.name}
                         </p>
                         {apt.patientNote && (
-                          <p className="text-xs text-on-surface-variant font-sans italic truncate">
+                          <p className="truncate text-xs italic text-on-surface-variant font-sans">
                             {apt.patientNote}
                           </p>
                         )}
                       </div>
                     </div>
-                    <div className="flex items-center gap-2 flex-shrink-0 ml-2">
-                      <span className={`px-2 py-1 rounded-full text-xs font-bold font-sans ${STATUS_COLORS[apt.status]}`}>
-                        {STATUS_LABELS[apt.status]}
+                    <div className="flex flex-shrink-0 items-center gap-2">
+                      <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${meta.cls}`}>
+                        {meta.label}
                       </span>
-                      {apt.status === "pending" && (
-                        <ConfirmButton appointmentId={apt.id} />
-                      )}
+                      <DoctorAppointmentActions appointmentId={apt.id} status={apt.status} />
                     </div>
                   </div>
-                ))}
+                );
+              })}
+            </div>
+          )}
+        </div>
+
+        {/* Rating + recent reviews */}
+        <div className="space-y-6">
+          <div className="rounded-2xl bg-surface-container-lowest p-6 shadow-xl shadow-indigo-500/5">
+            <h2 className="mb-3 font-bold font-heading text-on-surface">Đánh giá</h2>
+            <div className="flex items-center gap-3">
+              <span className="material-symbols-outlined text-amber-500 text-[32px]">star</span>
+              <div>
+                <p className="text-3xl font-extrabold font-sans text-on-surface">
+                  {(profile?.averageRating ?? 0).toFixed(1)}
+                </p>
+                <p className="text-xs text-on-surface-variant font-sans">
+                  {profile?.totalReviews ?? 0} đánh giá
+                </p>
               </div>
-            )}
-          </div>
-
-          {/* All appointments */}
-          <div className="bg-surface-container-lowest rounded-2xl p-6 shadow-xl shadow-indigo-500/5">
-            <h2 className="text-lg font-bold font-heading mb-4">Tất cả lịch hẹn</h2>
-
-            {appointments.length === 0 ? (
-              <p className="text-on-surface-variant font-sans text-sm">Chưa có lịch hẹn nào.</p>
-            ) : (
-              <div className="flex flex-col gap-1 max-h-96 overflow-y-auto">
-                {appointments.map((apt) => (
-                  <div
-                    key={apt.id}
-                    className="flex items-center justify-between py-3 border-b border-outline-variant/20 last:border-0"
-                  >
-                    <div className="min-w-0">
-                      <p className="font-bold text-on-surface font-sans text-sm truncate">
-                        {apt.patient.name}
+            </div>
+            {reviewsData.reviews.length > 0 && (
+              <div className="mt-4 space-y-3 border-t border-outline-variant/20 pt-4">
+                {reviewsData.reviews.map((r) => (
+                  <div key={r.id}>
+                    <div className="flex items-center justify-between">
+                      <p className="text-sm font-semibold font-sans text-on-surface">
+                        {r.patientName}
                       </p>
-                      {apt.slot && (
-                        <p className="text-xs text-on-surface-variant font-sans">
-                          {new Date(apt.slot.date).toLocaleDateString("vi-VN", {
-                            weekday: "short",
-                            day: "numeric",
-                            month: "numeric",
-                            year: "numeric",
-                            timeZone: "UTC",
-                          })}
-                          {" · "}
-                          {apt.slot.startTime}
-                        </p>
-                      )}
+                      <span className="flex items-center gap-0.5 text-xs font-bold text-on-surface">
+                        <span className="material-symbols-outlined text-amber-500 text-[14px]">
+                          star
+                        </span>
+                        {r.rating}
+                      </span>
                     </div>
-                    <span className={`px-2 py-1 rounded-full text-xs font-bold font-sans flex-shrink-0 ml-2 ${STATUS_COLORS[apt.status]}`}>
-                      {STATUS_LABELS[apt.status]}
-                    </span>
+                    {r.comment && (
+                      <p className="truncate text-xs text-on-surface-variant font-sans">
+                        {r.comment}
+                      </p>
+                    )}
                   </div>
                 ))}
               </div>
@@ -173,6 +221,34 @@ export default async function DoctorDashboardPage() {
           </div>
         </div>
       </div>
-    </main>
+
+      {/* Weekly chart */}
+      <div className="rounded-2xl bg-surface-container-lowest p-6 shadow-xl shadow-indigo-500/5">
+        <h2 className="mb-1 font-bold font-heading text-on-surface">Lịch khám 7 ngày qua</h2>
+        <p className="mb-6 text-xs text-on-surface-variant font-sans">Số lịch khám theo ngày</p>
+        {!hasWeekly ? (
+          <p className="py-8 text-center text-sm text-on-surface-variant font-sans">
+            Chưa có lịch khám trong 7 ngày qua.
+          </p>
+        ) : (
+          <div className="flex h-40 items-end justify-between gap-3">
+            {weekly.map((d, i) => (
+              <div key={i} className="flex flex-1 flex-col items-center gap-2">
+                <div className="flex w-full flex-1 items-end">
+                  <div
+                    className="w-full rounded-t-lg bg-gradient-primary transition-all"
+                    style={{ height: `${Math.max(4, (d.count / maxWeekly) * 100)}%` }}
+                    title={`${d.count} lịch khám`}
+                  />
+                </div>
+                <span className="text-xs font-semibold text-on-surface-variant font-sans">
+                  {d.label}
+                </span>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
   );
 }

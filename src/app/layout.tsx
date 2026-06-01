@@ -28,9 +28,10 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const session = await auth();
-  // Admins operate entirely inside the dedicated admin shell (sidebar + topbar),
+  // Admins and doctors operate inside dedicated dashboard shells (sidebar + topbar),
   // so the public marketing Header/Footer are skipped for them.
-  const isAdmin = session?.user?.role === "admin";
+  const role = session?.user?.role;
+  const hideChrome = role === "admin" || role === "doctor";
 
   return (
     <html
@@ -41,9 +42,9 @@ export default async function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
       </head>
       <body className="min-h-full flex flex-col bg-background text-on-surface">
-        {!isAdmin && <Header session={session} />}
+        {!hideChrome && <Header session={session} />}
         {children}
-        {!isAdmin && <Footer />}
+        {!hideChrome && <Footer />}
       </body>
     </html>
   );

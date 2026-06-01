@@ -120,6 +120,37 @@ export async function confirmBooking(
 }
 
 /**
+ * Mark a confirmed appointment as completed and optionally store the doctor's note.
+ * Only the owning doctor (or admin) may complete. The slot stays booked.
+ */
+export async function completeBooking(
+  appointmentId: string,
+  actorId: string,
+  actorRole: string,
+  doctorNote?: string
+) {
+  await dbConnect();
+
+  const appointment = await Appointment.findById(appointmentId);
+  if (!appointment) throw new Error("Appointment not found");
+
+  if (actorRole !== "admin") {
+    if (actorRole !== "doctor" || appointment.doctorId.toString() !== actorId) {
+      throw new Error("Forbidden");
+    }
+  }
+
+  if (appointment.status !== "confirmed") {
+    throw new Error("Only confirmed appointments can be completed");
+  }
+
+  appointment.status = "completed";
+  if (typeof doctorNote === "string") appointment.doctorNote = doctorNote.trim();
+  await appointment.save();
+  return appointment;
+}
+
+/**
  * Cancel an appointment and release the slot.
  * Patient (own), doctor (own), or admin may cancel.
  * Completed appointments cannot be cancelled.
